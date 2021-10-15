@@ -49,8 +49,9 @@ export default function UserListScreen({ navigation }) {
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <Pressable
-          style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1.0 }]}
+          style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1.0 }] /* touchable with opaciity */}
           onPress={() => {
+            // navigate to a chat with a specific friend
             navigation.navigate("Chat", { friendId: item.id });
           }}
         >
