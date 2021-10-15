@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Pressable } from "react-native";
 
 // mock data - we'll replace this later
 const mockFriends = [
@@ -33,7 +33,7 @@ const mockFriends = [
   },
 ];
 
-export default function UserListScreen() {
+export default function UserListScreen({ navigation }) {
   return (
     <FlatList
       containerStyle={{
@@ -42,6 +42,7 @@ export default function UserListScreen() {
       data={mockFriends}
       keyExtractor={item => item.id.toString()}
       renderItem={({ item }) => (
+        <Pressable onPress={() => { navigation.navigate('Chat', { friendId: item.id })}}>
         <View
           style={{
             paddingHorizontal: 7,
@@ -53,6 +54,7 @@ export default function UserListScreen() {
         >
           <Text style={{ fontSize: 18 }}>{item.name}</Text>
         </View>
+        </Pressable>
       )}
       ItemSeparatorComponent={() => <View style={{ width: '100%', height: 1, backgroundColor: 'lightGray'}} />}
     />
