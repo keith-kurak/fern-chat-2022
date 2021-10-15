@@ -39,7 +39,7 @@ const mockFriends = [
   },
 ];
 
-export default function UserListScreen({ navigation }) {
+export default function FriendScreen({ navigation }) {
   return (
     <FlatList
       containerStyle={{

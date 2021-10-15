@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, Text } from "react-native";
 
-export default function SettingScreen() {
+export default function LoginScreen() {
   return (
     <View
       style={{
@@ -11,7 +11,7 @@ export default function SettingScreen() {
         alignItems: "center",
       }}
     >
-      <Text>It's some settings!</Text>
+      <Text>You would login here!</Text>
     </View>
   );
 }
