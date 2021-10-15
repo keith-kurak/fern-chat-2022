@@ -1,17 +1,60 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList } from "react-native";
+
+// mock data - we'll replace this later
+const mockFriends = [
+  {
+    id: 1,
+    name: "Steve",
+  },
+  {
+    id: 2,
+    name: "Melanie",
+  },
+  {
+    id: 3,
+    name: "Kavita",
+  },
+  {
+    id: 4,
+    name: "Jose",
+  },
+  {
+    id: 5,
+    name: "LeBron",
+  },
+  {
+    id: 6,
+    name: "Sarah",
+  },
+  {
+    id: 7,
+    name: "Erin",
+  },
+];
 
 export default function UserListScreen() {
   return (
-    <View
-      style={{
+    <FlatList
+      containerStyle={{
         flex: 1,
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
       }}
-    >
-      <Text>It's a list of friends!!</Text>
-    </View>
+      data={mockFriends}
+      keyExtractor={item => item.id.toString()}
+      renderItem={({ item }) => (
+        <View
+          style={{
+            paddingHorizontal: 7,
+            paddingVertical: 14,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white"
+          }}
+        >
+          <Text style={{ fontSize: 18 }}>{item.name}</Text>
+        </View>
+      )}
+      ItemSeparatorComponent={() => <View style={{ width: '100%', height: 1, backgroundColor: 'lightGray'}} />}
+    />
   );
 }
