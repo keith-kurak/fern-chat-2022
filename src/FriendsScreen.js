@@ -1,5 +1,11 @@
 import * as React from "react";
-import { View, Text, FlatList, TouchableOpacity, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 
 // mock data - we'll replace this later
 const mockFriends = [
@@ -40,23 +46,32 @@ export default function UserListScreen({ navigation }) {
         flex: 1,
       }}
       data={mockFriends}
-      keyExtractor={item => item.id.toString()}
+      keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
-        <Pressable onPress={() => { navigation.navigate('Chat', { friendId: item.id })}}>
-        <View
-          style={{
-            paddingHorizontal: 7,
-            paddingVertical: 14,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "white"
+        <Pressable
+          style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1.0 }]}
+          onPress={() => {
+            navigation.navigate("Chat", { friendId: item.id });
           }}
         >
-          <Text style={{ fontSize: 18 }}>{item.name}</Text>
-        </View>
+          <View
+            style={{
+              paddingHorizontal: 7,
+              paddingVertical: 14,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "white",
+            }}
+          >
+            <Text style={{ fontSize: 18 }}>{item.name}</Text>
+          </View>
         </Pressable>
       )}
-      ItemSeparatorComponent={() => <View style={{ width: '100%', height: 1, backgroundColor: 'lightGray'}} />}
+      ItemSeparatorComponent={() => (
+        <View
+          style={{ width: "100%", height: 1, backgroundColor: "lightGray" }}
+        />
+      )}
     />
   );
 }
