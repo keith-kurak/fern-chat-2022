@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, Text } from "react-native";
 
-export default function FriendsScreen() {
+export default function ChannelsScreen() {
   return (
     <View
       style={{
@@ -11,7 +11,7 @@ export default function FriendsScreen() {
         alignItems: "center",
       }}
     >
-      <Text>It's a list of friends!!</Text>
+      <Text>It's a list of channels!!</Text>
     </View>
   );
 }

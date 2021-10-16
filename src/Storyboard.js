@@ -2,7 +2,7 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SettingsScreen from "./SettingsScreen";
-import FriendsScreen from "./FriendsScreen";
+import ChannelsScreen from "./ChannelsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,8 +11,8 @@ export default function Storyboard() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Friends"
-          component={FriendsScreen}
+          name="Channels"
+          component={ChannelsScreen}
         />
         <Stack.Screen
           name="Settings"
