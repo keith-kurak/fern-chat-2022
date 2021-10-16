@@ -3,56 +3,55 @@ import {
   View,
   Text,
   FlatList,
-  TouchableOpacity,
   Pressable,
 } from "react-native";
 
 // mock data - we'll replace this later
-const mockFriends = [
+const mockChannels = [
   {
     id: 1,
-    name: "Steve",
+    name: "#videogames",
   },
   {
     id: 2,
-    name: "Melanie",
+    name: "#viralvideos",
   },
   {
     id: 3,
-    name: "Kavita",
+    name: "#underwaterbasketweaving",
   },
   {
     id: 4,
-    name: "Jose",
+    name: "#codemash",
   },
   {
     id: 5,
-    name: "LeBron",
+    name: "#mashedpotatoes",
   },
   {
     id: 6,
-    name: "Sarah",
+    name: "#knittingcentral",
   },
   {
     id: 7,
-    name: "Erin",
+    name: "#llamatalk",
   },
 ];
 
-export default function FriendScreen({ navigation }) {
+export default function ChannelsScreen({ navigation }) {
   return (
     <FlatList
       containerStyle={{
         flex: 1,
       }}
-      data={mockFriends}
+      data={mockChannels}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <Pressable
           style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1.0 }] /* touchable with opaciity */}
           onPress={() => {
             // navigate to a chat with a specific friend
-            navigation.navigate("Chat", { friendId: item.id });
+            navigation.navigate("Chat", { channelId: item.id });
           }}
         >
           <View

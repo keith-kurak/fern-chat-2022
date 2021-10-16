@@ -12,7 +12,7 @@ export default function ChatScreen({ route }) {
       }}
     >
       <Text>It's a chat screen!!</Text>
-      <Text>{`Friend with id ${route.params.friendId}`}</Text>
+      <Text>{`Channel with id ${route.params.channelId}`}</Text>
     </View>
   );
 }

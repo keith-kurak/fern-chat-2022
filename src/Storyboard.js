@@ -4,9 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
 import SettingsScreen from "./SettingsScreen";
-import FriendsScreen from "./FriendsScreen";
 import ChatScreen from "./ChatScreen";
 import LoginScreen from "./LoginScreen";
+import ChannelsScreen from "./ChannelsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,8 +20,8 @@ export default function Storyboard() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Friends"
-          component={FriendsScreen}
+          name="Channels"
+          component={ChannelsScreen}
           options={({ navigation }) => ({
             headerRight: () => (
               <Pressable
