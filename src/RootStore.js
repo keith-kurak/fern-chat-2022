@@ -1,5 +1,6 @@
 import { types } from "mobx-state-tree";
 import { sortBy } from 'lodash';
+import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import React from "react";
 
 // create a type used by your RootStore
@@ -20,7 +21,11 @@ const RootStore = types
   }))
   .actions((self) => {
     const addChannel = () => {
-      self.channels.push({ id: self.channels.length, name: "some-new-channel"});
+      self.channels.push({ id: self.channels.length, name: uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+        length: 2,
+        separator: '-'
+      })});
     };
 
     return {
