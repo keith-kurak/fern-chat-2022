@@ -1,54 +1,25 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  Pressable,
-} from "react-native";
+import { View, Text, FlatList, Pressable } from "react-native";
+import { observer } from "mobx-react";
+import { useStore } from './RootStore';
 
-// mock data - we'll replace this later
-const mockChannels = [
-  {
-    id: 1,
-    name: "#videogames",
-  },
-  {
-    id: 2,
-    name: "#viralvideos",
-  },
-  {
-    id: 3,
-    name: "#underwaterbasketweaving",
-  },
-  {
-    id: 4,
-    name: "#codemash",
-  },
-  {
-    id: 5,
-    name: "#mashedpotatoes",
-  },
-  {
-    id: 6,
-    name: "#knittingcentral",
-  },
-  {
-    id: 7,
-    name: "#llamatalk",
-  },
-];
 
-export default function ChannelsScreen({ navigation }) {
+export default observer(function ChannelsScreen({ navigation }) {
+  const rootStore = useStore();
   return (
     <FlatList
       containerStyle={{
         flex: 1,
       }}
-      data={mockChannels}
+      data={rootStore.channels}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <Pressable
-          style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1.0 }] /* touchable with opaciity */}
+          style={
+            ({ pressed }) => [
+              { opacity: pressed ? 0.5 : 1.0 },
+            ] /* touchable with opaciity */
+          }
           onPress={() => {
             // navigate to a chat with a specific friend
             navigation.navigate("Chat", { channelId: item.id });
@@ -63,7 +34,7 @@ export default function ChannelsScreen({ navigation }) {
               backgroundColor: "white",
             }}
           >
-            <Text style={{ fontSize: 18 }}>{item.name}</Text>
+            <Text style={{ fontSize: 18 }}>{`#${item.name}`}</Text>
           </View>
         </Pressable>
       )}
@@ -74,4 +45,4 @@ export default function ChannelsScreen({ navigation }) {
       )}
     />
   );
-}
+});
