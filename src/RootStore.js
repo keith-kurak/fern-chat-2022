@@ -1,4 +1,5 @@
 import { types } from "mobx-state-tree";
+import { sortBy } from 'lodash';
 import React from "react";
 
 // create a type used by your RootStore
@@ -12,6 +13,11 @@ const RootStore = types
   .model("RootStore", {
     channels: types.optional(types.array(Channel), []),
   })
+  .views(self => ({
+    get channelsSorted() {
+      return sortBy(self.channels, c => c.id);
+    }
+  }))
   .actions((self) => {
     const addChannel = () => {
       self.channels.push({ id: self.channels.length, name: "some-new-channel"});
@@ -29,31 +35,31 @@ const StoreContext = React.createContext(null);
 // mock data - we'll replace this later
 const mockChannels = [
   {
-    id: 1,
+    id: 0,
     name: "videogames",
   },
   {
-    id: 2,
+    id: 1,
     name: "viralvideos",
   },
   {
-    id: 3,
+    id: 2,
     name: "underwaterbasketweaving",
   },
   {
-    id: 4,
+    id: 3,
     name: "codemash",
   },
   {
-    id: 5,
+    id: 4,
     name: "mashedpotatoes",
   },
   {
-    id: 6,
+    id: 5,
     name: "knittingcentral",
   },
   {
-    id: 0,
+    id: 6,
     name: "llamatalk",
   },
 ];

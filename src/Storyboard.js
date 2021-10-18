@@ -3,14 +3,18 @@ import { Pressable } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
+import { observer } from "mobx-react";
 import SettingsScreen from "./SettingsScreen";
 import ChatScreen from "./ChatScreen";
 import LoginScreen from "./LoginScreen";
 import ChannelsScreen from "./ChannelsScreen";
+import { useStore } from './RootStore';
 
 const Stack = createNativeStackNavigator();
 
-export default function Storyboard() {
+export default observer(function Storyboard() {
+  const rootStore = useStore();
+
   const isLoggedIn = true;
   if (!isLoggedIn) {
     return <LoginScreen />
@@ -23,6 +27,18 @@ export default function Storyboard() {
           name="Channels"
           component={ChannelsScreen}
           options={({ navigation }) => ({
+            headerLeft: () => (
+              <Pressable
+                style={
+                  ({ pressed }) => [
+                    { opacity: pressed ? 0.5 : 1.0 },
+                  ] /* touchable with opaciity */
+                }
+                onPress={() => rootStore.addChannel()}
+              >
+                <Feather name="plus" size={18} />
+              </Pressable>
+            ),
             headerRight: () => (
               <Pressable
                 style={
@@ -42,4 +58,4 @@ export default function Storyboard() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+});

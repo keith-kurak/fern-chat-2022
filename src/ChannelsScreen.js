@@ -11,7 +11,7 @@ export default observer(function ChannelsScreen({ navigation }) {
       containerStyle={{
         flex: 1,
       }}
-      data={rootStore.channels}
+      data={rootStore.channelsSorted}
       keyExtractor={(item) => item.id.toString()}
       renderItem={({ item }) => (
         <Pressable
