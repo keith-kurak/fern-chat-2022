@@ -15,8 +15,7 @@ const Stack = createNativeStackNavigator();
 export default observer(function Storyboard() {
   const rootStore = useStore();
 
-  const isLoggedIn = true;
-  if (!isLoggedIn) {
+  if (!rootStore.isLoggedIn) {
     return <LoginScreen />
   }
 

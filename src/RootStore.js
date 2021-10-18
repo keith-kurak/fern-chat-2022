@@ -1,6 +1,10 @@
 import { types } from "mobx-state-tree";
-import { sortBy } from 'lodash';
-import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
+import { sortBy } from "lodash";
+import {
+  uniqueNamesGenerator,
+  adjectives,
+  animals,
+} from "unique-names-generator";
 import React from "react";
 
 // create a type used by your RootStore
@@ -13,23 +17,37 @@ const Channel = types.model("Channel", {
 const RootStore = types
   .model("RootStore", {
     channels: types.optional(types.array(Channel), []),
+    isLoggedIn: types.optional(types.boolean, true), // set to true for now since we don't really have login sessions yet
   })
-  .views(self => ({
+  .views((self) => ({
     get channelsSorted() {
-      return sortBy(self.channels, c => c.id);
-    }
+      return sortBy(self.channels, (c) => c.id);
+    },
   }))
   .actions((self) => {
     const addChannel = () => {
-      self.channels.push({ id: self.channels.length, name: uniqueNamesGenerator({
-        dictionaries: [adjectives, animals],
-        length: 2,
-        separator: '-'
-      })});
+      self.channels.push({
+        id: self.channels.length,
+        name: uniqueNamesGenerator({
+          dictionaries: [adjectives, animals],
+          length: 2,
+          separator: "-",
+        }) /* names like: "awesome-ocelot" */,
+      });
     };
+
+    const login = () => {
+      self.isLoggedIn = true;
+    }
+
+    const logout = () => {
+      self.isLoggedIn = false;
+    }
 
     return {
       addChannel,
+      login,
+      logout,
     };
   });
 

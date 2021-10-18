@@ -1,7 +1,9 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Button } from "react-native";
+import { useStore } from "./RootStore";
 
 export default function SettingsScreen() {
+  const rootStore = useStore();
   return (
     <View
       style={{
@@ -11,7 +13,7 @@ export default function SettingsScreen() {
         alignItems: "center",
       }}
     >
-      <Text>It's some settings!</Text>
+      <Button onPress={() => rootStore.logout()} title="Logout" />
     </View>
   );
 }

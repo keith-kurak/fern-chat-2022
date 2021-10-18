@@ -1,7 +1,9 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Button } from "react-native";
+import { useStore } from './RootStore';
 
 export default function LoginScreen() {
+  const rootStore = useStore();
   return (
     <View
       style={{
@@ -11,7 +13,7 @@ export default function LoginScreen() {
         alignItems: "center",
       }}
     >
-      <Text>You would login here!</Text>
+      <Button onPress={() => rootStore.login()} title="Login" />
     </View>
   );
 }
