@@ -1,0 +1,15 @@
+{
+  "apiKey": "BLAH",
+
+  "authDomain": "BLAH",
+
+  "projectId": "BLAH",
+
+  "storageBucket": "BLAH",
+
+  "messagingSenderId": "BLAH",
+
+  "appId": "BLAH",
+
+  "measurementId": "BLAH"
+}
