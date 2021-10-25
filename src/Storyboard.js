@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Pressable } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,13 +15,17 @@ const Stack = createNativeStackNavigator();
 export default observer(function Storyboard() {
   const rootStore = useStore();
 
+  useEffect(() => {
+    rootStore.init();
+  }, []);
+
   if (!rootStore.isLoggedIn) {
     return <LoginScreen />
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
           name="Channels"
           component={ChannelsScreen}

@@ -6,10 +6,16 @@ import {
   animals,
 } from "unique-names-generator";
 import React from "react";
+import {
+  collection,
+  query,
+  onSnapshot,
+  getFirestore,
+} from "firebase/firestore";
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.number,
+  id: types.string,
   name: types.string,
 });
 
@@ -25,6 +31,22 @@ const RootStore = types
     },
   }))
   .actions((self) => {
+    let unsubscribe; // we could later use this to tear down on logout... or something
+    const init = () => {
+      const db = getFirestore();
+      const q = query(collection(db, "channels"));
+      unsubscribe = onSnapshot(q, (querySnapshot) => {
+        self.updateChannels(querySnapshot);
+      });
+    };
+
+    const updateChannels = (querySnapshot) => {
+      self.channels = [];
+      querySnapshot.forEach((doc) => {
+        self.channels.push({ id: doc.id, name: doc.data().name });
+      });
+    };
+
     const addChannel = () => {
       self.channels.push({
         id: self.channels.length,
@@ -38,16 +60,18 @@ const RootStore = types
 
     const login = () => {
       self.isLoggedIn = true;
-    }
+    };
 
     const logout = () => {
       self.isLoggedIn = false;
-    }
+    };
 
     return {
       addChannel,
       login,
       logout,
+      init,
+      updateChannels,
     };
   });
 
@@ -55,40 +79,8 @@ const RootStore = types
 
 const StoreContext = React.createContext(null);
 
-// mock data - we'll replace this later
-const mockChannels = [
-  {
-    id: 0,
-    name: "videogames",
-  },
-  {
-    id: 1,
-    name: "viralvideos",
-  },
-  {
-    id: 2,
-    name: "underwaterbasketweaving",
-  },
-  {
-    id: 3,
-    name: "codemash",
-  },
-  {
-    id: 4,
-    name: "mashedpotatoes",
-  },
-  {
-    id: 5,
-    name: "knittingcentral",
-  },
-  {
-    id: 6,
-    name: "llamatalk",
-  },
-];
-
 export const StoreProvider = ({ children }) => {
-  const store = RootStore.create({ channels: mockChannels });
+  const store = RootStore.create();
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );
