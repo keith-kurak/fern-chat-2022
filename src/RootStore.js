@@ -1,4 +1,4 @@
-import { types } from "mobx-state-tree";
+import { types, flow } from "mobx-state-tree";
 import { sortBy } from "lodash";
 import {
   uniqueNamesGenerator,
@@ -11,6 +11,7 @@ import {
   query,
   onSnapshot,
   getFirestore,
+  addDoc,
 } from "firebase/firestore";
 
 // create a type used by your RootStore
@@ -47,16 +48,17 @@ const RootStore = types
       });
     };
 
-    const addChannel = () => {
-      self.channels.push({
-        id: self.channels.length,
+    const addChannel = flow(function* addChannel() {
+      const db = getFirestore();
+      // add new document with auto-id
+      yield addDoc(collection(db, "channels"), {
         name: uniqueNamesGenerator({
           dictionaries: [adjectives, animals],
           length: 2,
           separator: "-",
         }) /* names like: "awesome-ocelot" */,
       });
-    };
+    });
 
     const login = () => {
       self.isLoggedIn = true;
