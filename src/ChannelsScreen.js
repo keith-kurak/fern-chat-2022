@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { View, Text, FlatList, Pressable } from "react-native";
 import { observer } from "mobx-react";
 import { useStore } from './RootStore';
@@ -6,6 +6,13 @@ import { useStore } from './RootStore';
 
 export default observer(function ChannelsScreen({ navigation }) {
   const rootStore = useStore();
+
+  useEffect(() => {
+    rootStore.startStreamingChannels();
+
+    return rootStore.stopStreamingChannels;
+  }, []);
+
   return (
     <FlatList
       containerStyle={{

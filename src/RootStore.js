@@ -34,21 +34,18 @@ const RootStore = types
     },
   }))
   .actions((self) => {
-    let unsubscribe; // we could later use this to tear down on logout... or something
-    const init = () => {
+    let unsubscribeFromChannelsFeed; // we could later use this to tear down on logout... or something
+    const startStreamingChannels = () => {
       const db = getFirestore();
       const q = query(collection(db, "channels"));
-      unsubscribe = onSnapshot(q, (querySnapshot) => {
+      unsubscribeFromChannelsFeed = onSnapshot(q, (querySnapshot) => {
         self.updateChannels(querySnapshot);
       });
     };
 
-    const updateChannels = (querySnapshot) => {
-      self.channels = [];
-      querySnapshot.forEach((doc) => {
-        self.channels.push({ id: doc.id, name: doc.data().name });
-      });
-    };
+    const stopStreamingChannels = () => {
+      unsubscribeFromChannelsFeed();
+    }
 
     const addChannel = flow(function* addChannel() {
       const db = getFirestore();
@@ -70,11 +67,20 @@ const RootStore = types
       self.isLoggedIn = false;
     };
 
+    // semi-private function only used to encapsulate channel update
+    const updateChannels = (querySnapshot) => {
+      self.channels = [];
+      querySnapshot.forEach((doc) => {
+        self.channels.push({ id: doc.id, name: doc.data().name });
+      });
+    };
+
     return {
       addChannel,
       login,
       logout,
-      init,
+      startStreamingChannels,
+      stopStreamingChannels,
       updateChannels,
     };
   });
