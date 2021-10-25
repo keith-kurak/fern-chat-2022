@@ -24,7 +24,9 @@ const Channel = types.model("Channel", {
 const RootStore = types
   .model("RootStore", {
     channels: types.optional(types.array(Channel), []),
-    isLoggedIn: types.optional(types.boolean, true), // set to true for now since we don't really have login sessions yet
+    isLoggedIn: types.optional(types.boolean, false), // set to true for now since we don't really have login sessions yet
+    isLoading: types.optional(types.boolean, false),
+    error: types.frozen(),
   })
   .views((self) => ({
     get channelsSorted() {
