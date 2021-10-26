@@ -4,7 +4,7 @@ import { useStore } from "./RootStore";
 import LoadingWrapper from "./components/LoadingWrapper";
 
 const textInputStyle = {
-  width: 200,
+  width: 250,
   fontSize: 16,
   borderWidth: 1,
   borderRadius: 5,

@@ -13,6 +13,7 @@ import {
   getFirestore,
   addDoc,
 } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, setPersistence, signOut, Persistence } from "firebase/auth";
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
@@ -59,13 +60,28 @@ const RootStore = types
       });
     });
 
-    const login = () => {
-      self.isLoggedIn = true;
-    };
+    const login = flow(function* login({ username, password }) {
+      const auth = getAuth();
+      try {
+        const user = yield signInWithEmailAndPassword(auth, username, password);
+        self.isLoggedIn = true;
+        self.error = null;
+        console.log(user);
+      } catch (error) {
+        self.error = error;
+        console.log(error);
+      }
+    });
 
-    const logout = () => {
-      self.isLoggedIn = false;
-    };
+    const logout = flow(function* logout() {
+      const auth = getAuth();
+      try {
+        yield signOut(auth);
+        self.isLoggedIn = false;
+      } catch (error) {
+        // eh?
+      }
+    });
 
     // semi-private function only used to encapsulate channel update
     const updateChannels = (querySnapshot) => {
