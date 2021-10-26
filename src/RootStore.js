@@ -13,7 +13,13 @@ import {
   getFirestore,
   addDoc,
 } from "firebase/firestore";
-import { getAuth, signInWithEmailAndPassword, setPersistence, signOut, Persistence } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  currentUser
+} from "firebase/auth";
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
@@ -26,6 +32,7 @@ const RootStore = types
   .model("RootStore", {
     channels: types.optional(types.array(Channel), []),
     isLoggedIn: types.optional(types.boolean, false), // set to true for now since we don't really have login sessions yet
+    user: types.frozen(),
     isLoading: types.optional(types.boolean, false),
     error: types.frozen(),
   })
@@ -35,6 +42,17 @@ const RootStore = types
     },
   }))
   .actions((self) => {
+    const afterCreate = () => {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          self.setIsLoggedIn(true, user);
+        } else {
+          self.setIsLoggedIn(false, null);
+        }
+      });
+    };
+
     let unsubscribeFromChannelsFeed; // we could later use this to tear down on logout... or something
     const startStreamingChannels = () => {
       const db = getFirestore();
@@ -46,7 +64,7 @@ const RootStore = types
 
     const stopStreamingChannels = () => {
       unsubscribeFromChannelsFeed();
-    }
+    };
 
     const addChannel = flow(function* addChannel() {
       const db = getFirestore();
@@ -83,7 +101,8 @@ const RootStore = types
       }
     });
 
-    // semi-private function only used to encapsulate channel update
+    // semi-private functions only used to encapsulate updates in actions
+
     const updateChannels = (querySnapshot) => {
       self.channels = [];
       querySnapshot.forEach((doc) => {
@@ -91,13 +110,25 @@ const RootStore = types
       });
     };
 
+    const setIsLoggedIn = (isLoggedIn, user) => {
+      self.isLoggedIn = isLoggedIn;
+      self.user = user;
+    };
+
+    const setIsLoading = (isLoading) => {
+      self.isLoading = isLoading;
+    };
+
     return {
+      afterCreate,
       addChannel,
       login,
       logout,
       startStreamingChannels,
       stopStreamingChannels,
       updateChannels,
+      setIsLoggedIn,
+      setIsLoading,
     };
   });
 
