@@ -35,7 +35,7 @@ export default observer(function Storyboard() {
                 }
                 onPress={() => rootStore.addChannel()}
               >
-                <Feather name="plus" size={18} />
+                <Feather name="plus" size={18} style={{ paddingHorizontal: 10 }} />
               </Pressable>
             ),
             headerRight: () => (
@@ -47,7 +47,7 @@ export default observer(function Storyboard() {
                 }
                 onPress={() => navigation.navigate("Settings")}
               >
-                <Feather name="settings" size={18} />
+                <Feather name="settings" size={18} style={{ paddingHorizontal: 10 }} />
               </Pressable>
             ),
           })}
