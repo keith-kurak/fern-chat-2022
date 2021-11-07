@@ -27,6 +27,13 @@ const Channel = types.model("Channel", {
   name: types.string,
 });
 
+const Message = types.model("Message", {
+  id: types.string,
+  username: types.string,
+  timestamp: types.string,
+  text: types.string,
+});
+
 // create a RootStore that keeps all the state for the app
 const RootStore = types
   .model("RootStore", {
@@ -35,6 +42,7 @@ const RootStore = types
     user: types.frozen(),
     isLoading: types.optional(types.boolean, false),
     error: types.frozen(),
+    messages: types.optional(types.array(Message), []),
   })
   .views((self) => ({
     get channelsSorted() {
@@ -119,6 +127,17 @@ const RootStore = types
       self.isLoading = isLoading;
     };
 
+    // temp stuff
+
+    const sendMessage = text => {
+      self.messages.push( {
+        id: self.messages.length.toString(),
+        timestamp: "2022-01-10T12:02:32",
+        username: "keith",
+        text,
+      });
+    }
+
     return {
       afterCreate,
       addChannel,
@@ -129,6 +148,7 @@ const RootStore = types
       updateChannels,
       setIsLoggedIn,
       setIsLoading,
+      sendMessage,
     };
   });
 
@@ -137,7 +157,32 @@ const RootStore = types
 const StoreContext = React.createContext(null);
 
 export const StoreProvider = ({ children }) => {
-  const store = RootStore.create();
+  const store = RootStore.create({
+    messages: [{
+      id: "1",
+      timestamp: "2022-01-10T11:57:11",
+      username: "keith",
+      text: "Hey hows it going"
+    },
+    {
+      id: "2",
+      timestamp: "2022-01-10T11:59:37",
+      username: "nelly",
+      text: "Pretty great!"
+    },
+    {
+      id: "3",
+      timestamp: "2022-01-10T12:01:32",
+      username: "keith",
+      text: "Cool"
+    },
+    {
+      id: "4",
+      timestamp: "2022-01-10T12:02:32",
+      username: "nelly",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit"
+    }]
+  });
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );
