@@ -13,14 +13,13 @@ import {
   getFirestore,
   addDoc,
   doc,
-  serverTimestamp
+  serverTimestamp,
 } from "firebase/firestore";
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  currentUser,
 } from "firebase/auth";
 
 // create a type used by your RootStore
@@ -32,7 +31,7 @@ const Channel = types.model("Channel", {
 const Message = types.model("Message", {
   id: types.string,
   username: types.string,
-  timestamp: types.string,
+  time: types.number,
   text: types.string,
 });
 
@@ -63,6 +62,8 @@ const RootStore = types
       });
     };
 
+    // streaming channels
+
     let unsubscribeFromChannelsFeed; // we could later use this to tear down on logout... or something
     const startStreamingChannels = () => {
       const db = getFirestore();
@@ -76,6 +77,23 @@ const RootStore = types
       unsubscribeFromChannelsFeed();
     };
 
+    // streaming messages
+    let unsubscribeFromChannelMessagesFeed; // we could later use this to tear down on logout... or something
+    const startStreamingChannelMessages = (channelId) => {
+      const db = getFirestore();
+      const q = query(
+        collection(doc(collection(db, "channels"), channelId), "messages")
+      );
+      unsubscribeFromChannelMessagesFeed = onSnapshot(q, (querySnapshot) => {
+        self.updateMessages(querySnapshot);
+      });
+    };
+
+    const stopStreamingCurrentChannel = () => {
+      self.messages = [];
+      unsubscribeFromChannelMessagesFeed();
+    };
+
     const addChannel = flow(function* addChannel() {
       const db = getFirestore();
       // add new document with auto-id
@@ -86,6 +104,19 @@ const RootStore = types
           separator: "-",
         }) /* names like: "awesome-ocelot" */,
       });
+    });
+
+    const sendMessage = flow(function* sendMessage({ text, channelId }) {
+      const db = getFirestore();
+      // add new document with auto-id
+      yield addDoc(
+        collection(doc(collection(db, "channels"), channelId), "messages"),
+        {
+          text,
+          time: serverTimestamp(),
+          username: self.user.email,
+        }
+      );
     });
 
     const login = flow(function* login({ username, password }) {
@@ -120,6 +151,21 @@ const RootStore = types
       });
     };
 
+    const updateMessages = (querySnapshot) => {
+      self.messages = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        self.messages.push({
+          id: doc.id,
+          username: data.username,
+          // when message is added locally before upload, time is null because it will
+          // later be set by the server
+          time: data.time ? data.time.seconds * 1000 : new Date().getTime(),
+          text: data.text,
+        });
+      });
+    };
+
     const setIsLoggedIn = (isLoggedIn, user) => {
       self.isLoggedIn = isLoggedIn;
       self.user = user;
@@ -129,24 +175,6 @@ const RootStore = types
       self.isLoading = isLoading;
     };
 
-    // temp stuff
-
-    const sendMessage = flow(function* sendMessage({text, channelId}) {
-      const db = getFirestore();
-      // add new document with auto-id
-      yield addDoc(
-        collection(
-          doc(collection(db, "channels"), channelId),
-          "messages"
-        ),
-        {
-          text,
-          timestamp: serverTimestamp(),
-          username: self.user.email
-        }
-      );
-    });
-
     return {
       afterCreate,
       addChannel,
@@ -154,7 +182,10 @@ const RootStore = types
       logout,
       startStreamingChannels,
       stopStreamingChannels,
+      startStreamingChannelMessages,
+      stopStreamingCurrentChannel,
       updateChannels,
+      updateMessages,
       setIsLoggedIn,
       setIsLoading,
       sendMessage,
@@ -166,34 +197,7 @@ const RootStore = types
 const StoreContext = React.createContext(null);
 
 export const StoreProvider = ({ children }) => {
-  const store = RootStore.create({
-    messages: [
-      {
-        id: "1",
-        timestamp: "2022-01-10T11:57:11",
-        username: "keith",
-        text: "Hey hows it going",
-      },
-      {
-        id: "2",
-        timestamp: "2022-01-10T11:59:37",
-        username: "nelly",
-        text: "Pretty great!",
-      },
-      {
-        id: "3",
-        timestamp: "2022-01-10T12:01:32",
-        username: "keith",
-        text: "Cool",
-      },
-      {
-        id: "4",
-        timestamp: "2022-01-10T12:02:32",
-        username: "nelly",
-        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit",
-      },
-    ],
-  });
+  const store = RootStore.create({});
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );

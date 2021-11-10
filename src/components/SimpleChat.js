@@ -47,7 +47,7 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
               {item.username}
             </Text>
             <Text style={{ fontStyle: "italic", fontSize: 12 }}>
-              {DateTime.fromISO(item.timestamp).toLocaleString(
+              {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
             </Text>
@@ -58,7 +58,7 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
     );
   });
 
-  const messagesSorted = sortBy(messages, (m) => m.timestamp).reverse();
+  const messagesSorted = sortBy(messages, (m) => m.time).reverse();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
