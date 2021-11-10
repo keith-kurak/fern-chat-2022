@@ -12,13 +12,15 @@ import {
   onSnapshot,
   getFirestore,
   addDoc,
+  doc,
+  serverTimestamp
 } from "firebase/firestore";
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut,
-  currentUser
+  currentUser,
 } from "firebase/auth";
 
 // create a type used by your RootStore
@@ -129,14 +131,21 @@ const RootStore = types
 
     // temp stuff
 
-    const sendMessage = text => {
-      self.messages.push( {
-        id: self.messages.length.toString(),
-        timestamp: "2022-01-10T12:02:32",
-        username: "keith",
-        text,
-      });
-    }
+    const sendMessage = flow(function* sendMessage({text, channelId}) {
+      const db = getFirestore();
+      // add new document with auto-id
+      yield addDoc(
+        collection(
+          doc(collection(db, "channels"), channelId),
+          "messages"
+        ),
+        {
+          text,
+          timestamp: serverTimestamp(),
+          username: self.user.email
+        }
+      );
+    });
 
     return {
       afterCreate,
@@ -158,30 +167,32 @@ const StoreContext = React.createContext(null);
 
 export const StoreProvider = ({ children }) => {
   const store = RootStore.create({
-    messages: [{
-      id: "1",
-      timestamp: "2022-01-10T11:57:11",
-      username: "keith",
-      text: "Hey hows it going"
-    },
-    {
-      id: "2",
-      timestamp: "2022-01-10T11:59:37",
-      username: "nelly",
-      text: "Pretty great!"
-    },
-    {
-      id: "3",
-      timestamp: "2022-01-10T12:01:32",
-      username: "keith",
-      text: "Cool"
-    },
-    {
-      id: "4",
-      timestamp: "2022-01-10T12:02:32",
-      username: "nelly",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit"
-    }]
+    messages: [
+      {
+        id: "1",
+        timestamp: "2022-01-10T11:57:11",
+        username: "keith",
+        text: "Hey hows it going",
+      },
+      {
+        id: "2",
+        timestamp: "2022-01-10T11:59:37",
+        username: "nelly",
+        text: "Pretty great!",
+      },
+      {
+        id: "3",
+        timestamp: "2022-01-10T12:01:32",
+        username: "keith",
+        text: "Cool",
+      },
+      {
+        id: "4",
+        timestamp: "2022-01-10T12:02:32",
+        username: "nelly",
+        text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit",
+      },
+    ],
   });
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
