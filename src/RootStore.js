@@ -30,6 +30,7 @@ const Channel = types.model("Channel", {
 
 const Message = types.model("Message", {
   id: types.string,
+  uid: types.string,
   username: types.string,
   time: types.number,
   text: types.string,
@@ -56,6 +57,7 @@ const RootStore = types
       onAuthStateChanged(auth, (user) => {
         if (user) {
           self.setIsLoggedIn(true, user);
+          console.log(user)
         } else {
           self.setIsLoggedIn(false, null);
         }
@@ -115,6 +117,7 @@ const RootStore = types
           text,
           time: serverTimestamp(),
           username: self.user.email,
+          uid: self.user.uid,
         }
       );
     });
@@ -157,6 +160,7 @@ const RootStore = types
         const data = doc.data();
         self.messages.push({
           id: doc.id,
+          uid: data.uid,
           username: data.username,
           // when message is added locally before upload, time is null because it will
           // later be set by the server
