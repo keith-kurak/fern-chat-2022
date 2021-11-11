@@ -7,7 +7,7 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import { observer } from "mobx-react";
+import { observer, Observer } from "mobx-react";
 import { sortBy } from "lodash";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import { DateTime } from "luxon";
@@ -22,8 +22,8 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
 
   const onPressSend = useCallback(() => {
     onSendMessage(currentMessageText);
-    setCurrentMessageText('');
-  }, [ currentMessageText, setCurrentMessageText, onSendMessage ])
+    setCurrentMessageText("");
+  }, [currentMessageText, setCurrentMessageText, onSendMessage]);
 
   const renderItem = useCallback(({ item }) => {
     const userColor = colorForUsername(item.username);
@@ -41,11 +41,15 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: userColor }}
-            >
-              {item.username}
-            </Text>
+            <Observer>
+              {() => (
+                <Text
+                  style={{ fontSize: 18, fontWeight: "bold", color: userColor }}
+                >
+                  {item.username}
+                </Text>
+              )}
+            </Observer>
             <Text style={{ fontStyle: "italic", fontSize: 12 }}>
               {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT

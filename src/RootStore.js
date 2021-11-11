@@ -1,4 +1,4 @@
-import { types, flow } from "mobx-state-tree";
+import { types, flow, tryReference } from "mobx-state-tree";
 import { sortBy } from "lodash";
 import {
   uniqueNamesGenerator,
@@ -13,6 +13,8 @@ import {
   getFirestore,
   addDoc,
   doc,
+  getDoc,
+  setDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import {
@@ -24,17 +26,29 @@ import {
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.string,
+  id: types.identifier,
   name: types.string,
 });
 
-const Message = types.model("Message", {
-  id: types.string,
-  uid: types.string,
+const User = types.model("User", {
+  uid: types.identifier,
   username: types.string,
+})
+
+const Message = types.model("Message", {
+  id: types.identifier,
+  uid: types.reference(User),
   time: types.number,
   text: types.string,
-});
+}).views(self => ({
+  get username() {
+    const maybeValidUserRef = tryReference(() => self.uid);
+    if (maybeValidUserRef) {
+      return maybeValidUserRef.username;
+    }
+    return self.uid;
+  }
+}));
 
 // create a RootStore that keeps all the state for the app
 const RootStore = types
@@ -45,11 +59,19 @@ const RootStore = types
     isLoading: types.optional(types.boolean, false),
     error: types.frozen(),
     messages: types.optional(types.array(Message), []),
+    users: types.optional(types.array(User), [])
   })
   .views((self) => ({
     get channelsSorted() {
       return sortBy(self.channels, (c) => c.id);
     },
+    get username() {
+      const user = self.users.find(u => u.uid === self.user.uid);
+      if (user) {
+        return user.username;
+      }
+      return self.user.uid;
+    }
   }))
   .actions((self) => {
     const afterCreate = () => {
@@ -63,8 +85,9 @@ const RootStore = types
       });
     };
 
-    // streaming channels
+    // *** streaming functions ***
 
+    // channels
     let unsubscribeFromChannelsFeed; // we could later use this to tear down on logout... or something
     const startStreamingChannels = () => {
       const db = getFirestore();
@@ -78,7 +101,14 @@ const RootStore = types
       unsubscribeFromChannelsFeed();
     };
 
-    // streaming messages
+    const updateChannels = (querySnapshot) => {
+      self.channels = [];
+      querySnapshot.forEach((doc) => {
+        self.channels.push({ id: doc.id, name: doc.data().name });
+      });
+    };
+
+    // messages
     let unsubscribeFromChannelMessagesFeed; // we could later use this to tear down on logout... or something
     const startStreamingChannelMessages = (channelId) => {
       const db = getFirestore();
@@ -95,6 +125,49 @@ const RootStore = types
       unsubscribeFromChannelMessagesFeed();
     };
 
+    const updateMessages = (querySnapshot) => {
+      self.messages = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        self.messages.push({
+          id: doc.id,
+          uid: data.uid,
+          // when message is added locally before upload, time is null because it will
+          // later be set by the server
+          time: data.time ? data.time.seconds * 1000 : new Date().getTime(),
+          text: data.text,
+        });
+      });
+    };
+
+    // users
+    let unsubscribeFromUsersFeed; // we could later use this to tear down on logout... or something
+    const startStreamingUsers = () => {
+      const db = getFirestore();
+      const q = query(
+        collection(db, "users")
+      );
+      unsubscribeFromUsersFeed = onSnapshot(q, (querySnapshot) => {
+        self.updateUsers(querySnapshot);
+      });
+    };
+
+    const stopStreamingUsers = () => {
+      self.users = [];
+      if (unsubscribeFromUsersFeed) {
+        unsubscribeFromUsersFeed();
+      }
+    };
+
+    const updateUsers = (querySnapshot) => {
+      self.users = [];
+      querySnapshot.forEach((doc) => {
+        self.users.push({ uid: doc.id, username: doc.data().username });
+      });
+    };
+
+    // *** end streaming functions ***
+
     const addChannel = flow(function* addChannel() {
       const db = getFirestore();
       // add new document with auto-id
@@ -106,6 +179,11 @@ const RootStore = types
         }) /* names like: "awesome-ocelot" */,
       });
     });
+
+    const updateUsername = flow(function* updateUsername(newUsername){
+      const db = getFirestore();
+      yield setDoc(doc(db, "users", self.user.uid), { username: newUsername });
+    })
 
     const sendMessage = flow(function* sendMessage({ text, channelId }) {
       const db = getFirestore();
@@ -125,7 +203,6 @@ const RootStore = types
       const auth = getAuth();
       try {
         const user = yield signInWithEmailAndPassword(auth, username, password);
-        self.isLoggedIn = true;
         self.error = null;
         console.log(user);
       } catch (error) {
@@ -144,35 +221,21 @@ const RootStore = types
       }
     });
 
-    // semi-private functions only used to encapsulate updates in actions
-
-    const updateChannels = (querySnapshot) => {
-      self.channels = [];
-      querySnapshot.forEach((doc) => {
-        self.channels.push({ id: doc.id, name: doc.data().name });
-      });
-    };
-
-    const updateMessages = (querySnapshot) => {
-      self.messages = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        self.messages.push({
-          id: doc.id,
-          uid: data.uid,
-          username: data.username,
-          // when message is added locally before upload, time is null because it will
-          // later be set by the server
-          time: data.time ? data.time.seconds * 1000 : new Date().getTime(),
-          text: data.text,
-        });
-      });
-    };
-
-    const setIsLoggedIn = (isLoggedIn, user) => {
+    const setIsLoggedIn = flow(function* setIsLoggedIn(isLoggedIn, user) {
       self.isLoggedIn = isLoggedIn;
       self.user = user;
-    };
+      if (isLoggedIn) {
+        self.startStreamingUsers();
+        try {
+          const docSnapshot = yield getDoc(doc(getFirestore(), "users", user.uid));
+          if (!docSnapshot.exists()) {
+            self.updateUsername(user.email);
+          }
+        } catch (error) {}
+      } else {
+        self.stopStreamingUsers();
+      }
+    });
 
     const setIsLoading = (isLoading) => {
       self.isLoading = isLoading;
@@ -187,11 +250,15 @@ const RootStore = types
       stopStreamingChannels,
       startStreamingChannelMessages,
       stopStreamingCurrentChannel,
+      startStreamingUsers,
+      stopStreamingUsers,
       updateChannels,
       updateMessages,
+      updateUsers,
       setIsLoggedIn,
       setIsLoading,
       sendMessage,
+      updateUsername,
     };
   });
 
