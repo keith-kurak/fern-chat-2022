@@ -57,7 +57,6 @@ const RootStore = types
       onAuthStateChanged(auth, (user) => {
         if (user) {
           self.setIsLoggedIn(true, user);
-          console.log(user)
         } else {
           self.setIsLoggedIn(false, null);
         }
