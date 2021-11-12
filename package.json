@@ -30,7 +30,21 @@
     "unique-names-generator": "^4.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "@expo/webpack-config": "^0.16.7",
+    "workbox-webpack-plugin": "^6.1.5",
+    "workbox-background-sync": "^6.1.5",
+    "workbox-broadcast-update": "^6.1.5",
+    "workbox-cacheable-response": "^6.1.5",
+    "workbox-core": "^6.1.5",
+    "workbox-expiration": "^6.1.5",
+    "workbox-google-analytics": "^6.1.5",
+    "workbox-navigation-preload": "^6.1.5",
+    "workbox-precaching": "^6.1.5",
+    "workbox-range-requests": "^6.1.5",
+    "workbox-routing": "^6.1.5",
+    "workbox-strategies": "^6.1.5",
+    "workbox-streams": "^6.1.5"
   },
   "private": true
 }

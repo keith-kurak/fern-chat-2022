@@ -11,6 +11,8 @@ const app = initializeApp(firebaseConfig);
 initializeFirestore(app, { experimentalForceLongPolling: true });
 LogBox.ignoreLogs(['AsyncStorage has been extracted']);
 
+import * as serviceWorkerRegistration from "./src/serviceWorkerRegistration";
+
 export default function App() {
   return (
     <StoreProvider>
@@ -27,3 +29,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://cra.link/PWA
+serviceWorkerRegistration.register();

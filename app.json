@@ -30,7 +30,10 @@
       "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "preferRelatedApplications": false,
+      "display": "standalone",
+      "favicon": "./assets/favicon.png",
+      "name": "FERN Chat"
     }
   }
 }
