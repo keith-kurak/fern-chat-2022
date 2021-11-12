@@ -14,3 +14,5 @@ web-build/
 
 # firebase config
 firebaseConfig.json
+.firebase/hosting.d2ViLWJ1aWxk.cache
+.firebaserc
