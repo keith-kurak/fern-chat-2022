@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "fern-chat-2022",
-    "slug": "fern-chat-2022",
+    "slug": "fern-chat-2022-2",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,13 +17,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.keithkurak.fernchat2022",
+      "supportsTablet": true,
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.keithkurak.fernchat2022",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
