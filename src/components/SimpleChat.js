@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   SafeAreaView,
@@ -17,7 +17,7 @@ function colorForUsername(username) {
   return colors[username.charCodeAt(0) % 6];
 }
 
-const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
+const ChatInputBar = observer(function ({ onSendMessage }) {
   const [currentMessageText, setCurrentMessageText] = useState("");
 
   const onPressSend = useCallback(() => {
@@ -25,6 +25,54 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
     setCurrentMessageText("");
   }, [currentMessageText, setCurrentMessageText, onSendMessage]);
 
+  const onChangeText = useCallback(
+    (text) => setCurrentMessageText(text),
+    [setCurrentMessageText]
+  );
+
+  return (
+    <View
+      style={{
+        borderColor: "lightgray",
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderRadius: 3,
+        minHeight: 40, // multiline input looks weird without it
+        flexDirection: "row",
+        alignItems: "center",
+        backgroundColor: "white",
+      }}
+    >
+      <TextInput
+        style={{
+          paddingHorizontal: 10,
+          paddingVertical: 10,
+          fontSize: 16,
+          lineHeight: 20,
+          flex: 1,
+        }}
+        placeholder="Write something..."
+        onChangeText={onChangeText}
+        value={currentMessageText}
+        multiline
+      />
+      {currentMessageText && currentMessageText.length > 0 ? (
+        <Pressable
+          style={
+            ({ pressed }) => [
+              { opacity: pressed ? 0.5 : 1.0, paddingHorizontal: 10 },
+            ] /* touchable with opaciity */
+          }
+          onPress={onPressSend}
+        >
+          <Ionicons name="send" color="blue" size={34} />
+        </Pressable>
+      ) : null}
+    </View>
+  );
+});
+
+const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
   const renderItem = useCallback(({ item }) => {
     const userColor = colorForUsername(item.username);
     return (
@@ -47,7 +95,7 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
               {item.username}
             </Text>
             <Text style={{ fontStyle: "italic", fontSize: 14 }}>
-              {DateTime.fromISO(item.timestamp).toLocaleString(
+              {DateTime.fromISO(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
             </Text>
@@ -58,12 +106,10 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
     );
   });
 
-  const onChangeText = useCallback((text) => setCurrentMessageText(text), [ setCurrentMessageText ]);
-
-  const messagesSorted = useMemo(() => sortBy(messages, (m) => m.timestamp).reverse(), [ messages ]);
+  const messagesSorted = sortBy(messages, (m) => m.time).reverse(); // don't memo me! I change everytime a new message arrives
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <View style={{ flex: 1 }}>
         <FlatList
           data={messagesSorted}
@@ -71,44 +117,7 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
           keyExtractor={(item) => item.id.toString()}
           inverted
         />
-        <View
-          style={{
-            borderColor: "lightgray",
-            borderWidth: 1,
-            borderBottomWidth: 0,
-            borderRadius: 3,
-            minHeight: 40, // multiline input looks weird without it
-            flexDirection: "row",
-            alignItems: "center",
-            backgroundColor: 'white',
-          }}
-        >
-          <TextInput
-            style={{
-              paddingHorizontal: 10,
-              paddingVertical: 10,
-              fontSize: 16,
-              lineHeight: 20,
-              flex: 1,
-            }}
-            placeholder="Write something..."
-            onChangeText={onChangeText}
-            value={currentMessageText}
-            multiline
-          />
-          {currentMessageText && currentMessageText.length > 0 ? (
-            <Pressable
-              style={
-                ({ pressed }) => [
-                  { opacity: pressed ? 0.5 : 1.0, paddingHorizontal: 10 },
-                ] /* touchable with opaciity */
-              }
-              onPress={onPressSend}
-            >
-              <Ionicons name="send" color="blue" size={34} />
-            </Pressable>
-          ) : null}
-        </View>
+        <ChatInputBar onSendMessage={onSendMessage} />
       </View>
     </SafeAreaView>
   );
