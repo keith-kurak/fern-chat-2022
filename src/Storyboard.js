@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Platform } from "react-native";
+import { Pressable, Platform, KeyboardAvoidingView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
@@ -20,56 +20,64 @@ export default observer(function Storyboard() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
-        <Stack.Screen
-          name="Channels"
-          component={ChannelsScreen}
-          options={({ navigation }) => ({
-            headerLeft: () => (
-              <Pressable
-                style={
-                  ({ pressed }) => [
-                    { opacity: pressed ? 0.5 : 1.0 },
-                  ] /* touchable with opaciity */
-                }
-                onPress={() => rootStore.addChannel()}
-              >
-                <Feather
-                  name="plus"
-                  size={18}
-                  style={Platform.OS === "web" && { paddingHorizontal: 10 }}
-                />
-              </Pressable>
-            ),
-            headerRight: () => (
-              <Pressable
-                style={
-                  ({ pressed }) => [
-                    { opacity: pressed ? 0.5 : 1.0 },
-                  ] /* touchable with opaciity */
-                }
-                onPress={() => navigation.navigate("Settings")}
-              >
-                <Feather
-                  name="settings"
-                  size={18}
-                  style={Platform.OS === "web" && { paddingHorizontal: 10 }}
-                />
-              </Pressable>
-            ),
-          })}
-        />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen
-          name="Chat"
-          component={ChatScreen}
-          options={({ route }) => {
-            const channel = rootStore.channelsSorted.find(c => c.id === route.params.channelId);
-            return { title: channel ? channel.name : 'Chat' };
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <KeyboardAvoidingView
+      behavior="padding"
+      enabled={Platform.OS === "ios"}
+      style={{ flex: 1, backgroundColor: "#F2F2F2" }}
+    >
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
+          <Stack.Screen
+            name="Channels"
+            component={ChannelsScreen}
+            options={({ navigation }) => ({
+              headerLeft: () => (
+                <Pressable
+                  style={
+                    ({ pressed }) => [
+                      { opacity: pressed ? 0.5 : 1.0 },
+                    ] /* touchable with opaciity */
+                  }
+                  onPress={() => rootStore.addChannel()}
+                >
+                  <Feather
+                    name="plus"
+                    size={18}
+                    style={Platform.OS === "web" && { paddingHorizontal: 10 }}
+                  />
+                </Pressable>
+              ),
+              headerRight: () => (
+                <Pressable
+                  style={
+                    ({ pressed }) => [
+                      { opacity: pressed ? 0.5 : 1.0 },
+                    ] /* touchable with opaciity */
+                  }
+                  onPress={() => navigation.navigate("Settings")}
+                >
+                  <Feather
+                    name="settings"
+                    size={18}
+                    style={Platform.OS === "web" && { paddingHorizontal: 10 }}
+                  />
+                </Pressable>
+              ),
+            })}
+          />
+          <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={({ route }) => {
+              const channel = rootStore.channelsSorted.find(
+                (c) => c.id === route.params.channelId
+              );
+              return { title: channel ? channel.name : "Chat" };
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </KeyboardAvoidingView>
   );
 });
