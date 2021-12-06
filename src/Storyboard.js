@@ -8,7 +8,7 @@ import SettingsScreen from "./SettingsScreen";
 import ChatScreen from "./ChatScreen";
 import LoginScreen from "./LoginScreen";
 import ChannelsScreen from "./ChannelsScreen";
-import { useStore } from './RootStore';
+import { useStore } from "./RootStore";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +16,7 @@ export default observer(function Storyboard() {
   const rootStore = useStore();
 
   if (!rootStore.isLoggedIn) {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
 
   return (
@@ -35,7 +35,11 @@ export default observer(function Storyboard() {
                 }
                 onPress={() => rootStore.addChannel()}
               >
-                <Feather name="plus" size={18} style={Platform.OS === 'web' && { paddingHorizontal: 10 }} />
+                <Feather
+                  name="plus"
+                  size={18}
+                  style={Platform.OS === "web" && { paddingHorizontal: 10 }}
+                />
               </Pressable>
             ),
             headerRight: () => (
@@ -47,13 +51,24 @@ export default observer(function Storyboard() {
                 }
                 onPress={() => navigation.navigate("Settings")}
               >
-                <Feather name="settings" size={18} style={Platform.OS === 'web' && { paddingHorizontal: 10 }} />
+                <Feather
+                  name="settings"
+                  size={18}
+                  style={Platform.OS === "web" && { paddingHorizontal: 10 }}
+                />
               </Pressable>
             ),
           })}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={({ route }) => {
+            const channel = rootStore.channelsSorted.find(c => c.id === route.params.channelId);
+            return { title: channel ? channel.name : 'Chat' };
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
