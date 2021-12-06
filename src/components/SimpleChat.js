@@ -22,8 +22,8 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
 
   const onPressSend = useCallback(() => {
     onSendMessage(currentMessageText);
-    setCurrentMessageText('');
-  }, [ currentMessageText, setCurrentMessageText, onSendMessage ])
+    setCurrentMessageText("");
+  }, [currentMessageText, setCurrentMessageText, onSendMessage]);
 
   const renderItem = useCallback(({ item }) => {
     const userColor = colorForUsername(item.username);
@@ -46,61 +46,69 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
             >
               {item.username}
             </Text>
-            <Text style={{ fontStyle: "italic", fontSize: 12 }}>
+            <Text style={{ fontStyle: "italic", fontSize: 14 }}>
               {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
             </Text>
           </View>
-          <Text style={{ fontSize: 14 }}>{item.text}</Text>
+          <Text style={{ fontSize: 16 }}>{item.text}</Text>
         </View>
       </View>
     );
   });
 
-  const messagesSorted = sortBy(messages, (m) => m.time).reverse();
+  const onChangeText = useCallback((text) => setCurrentMessageText(text), [ setCurrentMessageText ]);
+
+  const messagesSorted = useMemo(() => sortBy(messages, (m) => m.time).reverse(), [ messages ]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <FlatList
-        style={{ flex: 1 }}
-        data={messagesSorted}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id.toString()}
-        inverted
-      />
-      <View
-        style={{
-          borderColor: "lightgray",
-          borderWidth: 1,
-          borderRadius: 3,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <TextInput
-          style={{
-            paddingHorizontal: 10,
-            paddingVertical: 10,
-            fontSize: 14,
-            flex: 1,
-          }}
-          placeholder="Write something..."
-          onChangeText={(text) => setCurrentMessageText(text)}
-          value={currentMessageText}
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={messagesSorted}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          inverted
         />
-        {currentMessageText && currentMessageText.length > 0 ? (
-          <Pressable
-            style={
-              ({ pressed }) => [
-                { opacity: pressed ? 0.5 : 1.0, paddingHorizontal: 10 },
-              ] /* touchable with opaciity */
-            }
-            onPress={onPressSend}
-          >
-            <Ionicons name="send" color="blue" size={34} />
-          </Pressable>
-        ) : null}
+        <View
+          style={{
+            borderColor: "lightgray",
+            borderWidth: 1,
+            borderBottomWidth: 0,
+            borderRadius: 3,
+            minHeight: 40, // multiline input looks weird without it
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: 'white',
+          }}
+        >
+          <TextInput
+            style={{
+              paddingHorizontal: 10,
+              paddingVertical: 10,
+              fontSize: 16,
+              lineHeight: 20,
+              flex: 1,
+            }}
+            placeholder="Write something..."
+            onChangeText={onChangeText}
+            value={currentMessageText}
+            multiline
+          />
+          {currentMessageText && currentMessageText.length > 0 ? (
+            <Pressable
+              style={
+                ({ pressed }) => [
+                  { opacity: pressed ? 0.5 : 1.0, paddingHorizontal: 10 },
+                ] /* touchable with opaciity */
+              }
+              onPress={onPressSend}
+            >
+              <Ionicons name="send" color="blue" size={34} />
+            </Pressable>
+          ) : null}
+        </View>
       </View>
     </SafeAreaView>
   );
