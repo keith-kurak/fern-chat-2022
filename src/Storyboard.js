@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Pressable } from "react-native";
+import { Pressable, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
@@ -18,7 +18,7 @@ export default function Storyboard() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
         <Stack.Screen
           name="Channels"
           component={ChannelsScreen}
@@ -32,7 +32,7 @@ export default function Storyboard() {
                 }
                 onPress={() => navigation.navigate("Settings")}
               >
-                <Feather name="settings" size={18} />
+                <Feather name="settings" size={18} style={Platform.OS === 'web' && { paddingHorizontal: 10 }} />
               </Pressable>
             ),
           })}
