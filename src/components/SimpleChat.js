@@ -95,7 +95,7 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
               {item.username}
             </Text>
             <Text style={{ fontStyle: "italic", fontSize: 14 }}>
-              {DateTime.fromISO(item.time).toLocaleString(
+              {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
             </Text>
