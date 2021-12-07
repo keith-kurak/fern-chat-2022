@@ -82,25 +82,28 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
           justifyContent: "flex-start",
           marginHorizontal: 10,
           marginVertical: 10,
+          flex: 1
         }}
       >
         <EvilIcons name="user" size={40} color={userColor} />
         <View style={{ flex: 1 }}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{ flexDirection: "row", justifyContent: "space-between", flex: 1, alignItems: 'flex-end' }}
           >
             <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: userColor }}
+              style={{ fontSize: 18, fontWeight: "bold", color: userColor, flex: 1 }}
+              ellipsizeMode="tail"
+              numberOfLines={1}
             >
               {item.username}
             </Text>
-            <Text style={{ fontStyle: "italic", fontSize: 14 }}>
+            <Text style={{ fontStyle: "italic", fontSize: 14, marginLeft: 5, color: 'gray' }}>
               {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
             </Text>
           </View>
-          <Text style={{ fontSize: 16 }}>{item.text}</Text>
+          <Text style={{ fontSize: 16, flex: 1 }}>{item.text}</Text>
         </View>
       </View>
     );
