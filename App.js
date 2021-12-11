@@ -9,7 +9,7 @@ import firebaseConfig from './firebaseConfig.json';
 
 const app = initializeApp(firebaseConfig);
 initializeFirestore(app, { experimentalForceLongPolling: true });
-LogBox.ignoreLogs(['AsyncStorage has been extracted']);
+LogBox.ignoreLogs(['AsyncStorage has been extracted', 'Setting a timer for a long period']);
 
 export default function App() {
   return (
