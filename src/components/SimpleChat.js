@@ -82,26 +82,43 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
           justifyContent: "flex-start",
           marginHorizontal: 10,
           marginVertical: 10,
-          flex: 1
+          flex: 1,
         }}
       >
         <EvilIcons name="user" size={40} color={userColor} />
         <View style={{ flex: 1 }}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between", flex: 1, alignItems: 'flex-end' }}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              flex: 1,
+              alignItems: "flex-end",
+            }}
           >
             <Observer>
               {() => (
                 <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: userColor, flex: 1 }}
-              ellipsizeMode="tail"
-              numberOfLines={1}
-            >
-              {item.username}
-            </Text>
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: userColor,
+                    flex: 1,
+                  }}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                >
+                  {item.username}
+                </Text>
               )}
             </Observer>
-            <Text style={{ fontStyle: "italic", fontSize: 14, marginLeft: 5, color: 'gray' }}>
+            <Text
+              style={{
+                fontStyle: "italic",
+                fontSize: 14,
+                marginLeft: 5,
+                color: "gray",
+              }}
+            >
               {DateTime.fromMillis(item.time).toLocaleString(
                 DateTime.DATETIME_SHORT
               )}
@@ -123,6 +140,21 @@ const SimpleChat = observer(function ({ messages, onSendMessage, isSending }) {
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
           inverted
+          contentContainerStyle={{ flexGrow: 1 }}
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontSize: 18 }}>It's awful quiet in here...</Text>
+              <Text style={{ fontSize: 14, color: "gray" }}>
+                How about you start a conversation?
+              </Text>
+            </View>
+          }
         />
         <ChatInputBar onSendMessage={onSendMessage} />
       </View>
