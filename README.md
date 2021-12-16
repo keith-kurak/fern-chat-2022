@@ -38,5 +38,5 @@ We will walk through this during the pre-compiler, but you can also try it ahead
 3. Run `expo start`.
 4. A webpage with a QR code will appear. On iOS, scan the code with the Camera app. On Android, scan the code with the Expo Go app.
 5. If all goes well, the app will appear on your phone! If you have connection issues, verify your computer and phone are on the same network, or choose the "tunnel" option on the Expo web page that opened in the last step.
-6. Click "Run in web browser" on the QR code web page (or press 'w' in the CLI. After a while, the app should appear in your browser, as well!
+6. Click "Run in web browser" on the QR code web page (or press 'w' in the CLI). After a while, the app should appear in your browser, as well!
 
