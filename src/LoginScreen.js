@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Button, TextInput } from "react-native";
+import { View, Button, TextInput, Text } from "react-native";
+import { observer } from "mobx-react";
 import { useStore } from "./RootStore";
 import LoadingWrapper from "./components/LoadingWrapper";
 
@@ -10,10 +11,10 @@ const textInputStyle = {
   borderRadius: 5,
   borderColor: "whitesmoke",
   padding: 5,
-  margin: 3
+  margin: 3,
 };
 
-export default function LoginScreen() {
+export default observer(function LoginScreen() {
   const rootStore = useStore();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +42,11 @@ export default function LoginScreen() {
           secureTextEntry
           style={textInputStyle}
         />
+        {rootStore.loginError && (
+          <Text style={{ color: "red", marginVertical: 10 }}>
+            Login failed! Check that your email and password are correct.
+          </Text>
+        )}
         <Button
           onPress={() => rootStore.login({ username, password })}
           title="Login"
@@ -48,4 +54,4 @@ export default function LoginScreen() {
       </View>
     </LoadingWrapper>
   );
-}
+});

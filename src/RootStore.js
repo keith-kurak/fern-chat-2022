@@ -43,7 +43,7 @@ const RootStore = types
     isLoggedIn: types.optional(types.boolean, false), // set to true for now since we don't really have login sessions yet
     user: types.frozen(),
     isLoading: types.optional(types.boolean, false),
-    error: types.frozen(),
+    loginError: types.frozen(),
     messages: types.optional(types.array(Message), []),
   })
   .views((self) => ({
@@ -124,13 +124,16 @@ const RootStore = types
     const login = flow(function* login({ username, password }) {
       const auth = getAuth();
       try {
+        self.isLoading = true;
         const user = yield signInWithEmailAndPassword(auth, username, password);
         self.isLoggedIn = true;
-        self.error = null;
+        self.loginError = null;
         console.log(user);
       } catch (error) {
-        self.error = error;
+        self.loginError = error;
         console.log(error);
+      } finally {
+        self.isLoading = false;
       }
     });
 
