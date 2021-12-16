@@ -1,5 +1,3 @@
-# Fern Chat
-
 # CodeMash 2022 Pre-compiler prereqs
 
 ## Installation/ setup steps
