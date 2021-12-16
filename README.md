@@ -33,10 +33,10 @@ If you regularly do JavaScript development, you likely have many of these instal
 ## Verifying that everything is working
 We will walk through this during the pre-compiler, but you can also try it ahead of time to be sure that everything is installed correctly.
 (adapted from https://docs.expo.dev/get-started/create-a-new-app/ - see for troubleshooting tips)
-2. Run `expo init test-expo-app` in the terminal. Choose the "blank" template.
-3. Run `expo login` and enter your Expo account credentials.
-4. Run `expo start`.
-5. A webpage with a QR code will appear. On iOS, scan the code with the Camera app. On Android, scan the code with the Expo Go app.
-6. If all goes well, the app will appear on your phone! If you have connection issues, verify your computer and phone are on the same network, or choose the "tunnel" option on the Expo web page that opened in the last step.
-7. Click "Run in web browser" on the QR code web page (or press 'w' in the CLI. After a while, the app should appear in your browser, as well!
+1. Run `expo init test-expo-app` in the terminal. Choose the "blank" template.
+2. Run `expo login` and enter your Expo account credentials.
+3. Run `expo start`.
+4. A webpage with a QR code will appear. On iOS, scan the code with the Camera app. On Android, scan the code with the Expo Go app.
+5. If all goes well, the app will appear on your phone! If you have connection issues, verify your computer and phone are on the same network, or choose the "tunnel" option on the Expo web page that opened in the last step.
+6. Click "Run in web browser" on the QR code web page (or press 'w' in the CLI. After a while, the app should appear in your browser, as well!
 
