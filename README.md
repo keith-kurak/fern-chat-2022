@@ -15,7 +15,7 @@ If you regularly do JavaScript development, you likely have many of these instal
 7. Install Firebase CLI (`npm install --global firebase-tools`)
 #### Create Accounts
 8. [Create an Expo Account](https://expo.dev/). Follow the link and click "Sign Up".
-9. Download the "Expo Go" app on your phone from the App Store or Play Store.
+9. Download the "Expo Go" app on your phone from the App Store or Play Store. Sign into the app using the Expo account you just created.
 10. Go to the [Firebase Console](https://console.firebase.google.com/), click "Create a Project" or "Add Project", give it a name like "[myname]-fern-chat-2022" and accept all the default options. A google account is required for this step.
 
 ### Platform-specific tips
