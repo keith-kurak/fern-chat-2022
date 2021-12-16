@@ -12,7 +12,7 @@ If you regularly do JavaScript development, you likely have many of these instal
 5. Highly recommended: [Visual Studio Code](https://code.visualstudio.com/download). Any text editor will do, but my examples will be in VS Code.
 #### Install CLI Tools
 6. Install the Expo CLI (`npm install --global expo-cli`)
-7. Install Firebase CLI (`npm install -g firebase-tools`)
+7. Install Firebase CLI (`npm install --global firebase-tools`)
 #### Create Accounts
 8. [Create an Expo Account](https://expo.dev/). Follow the link and click "Sign Up".
 9. Download the "Expo Go" app on your phone from the App Store or Play Store.
