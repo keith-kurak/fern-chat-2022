@@ -3,7 +3,6 @@ import React from "react";
 import { StyleSheet, View, LogBox } from "react-native";
 import { initializeApp } from "firebase/app";
 import { initializeFirestore } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
 import Storyboard from "./src/Storyboard";
 import { StoreProvider } from "./src/RootStore";
 import firebaseConfig from './firebaseConfig.json';
