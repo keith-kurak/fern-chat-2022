@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Pressable, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -65,8 +65,10 @@ export default observer(function Storyboard() {
           name="Chat"
           component={ChatScreen}
           options={({ route }) => {
-            const channel = rootStore.channelsSorted.find(c => c.id === route.params.channelId);
-            return { title: channel ? channel.name : 'Chat' };
+            const channel = rootStore.channelsSorted.find(
+              (c) => c.id === route.params.channelId
+            );
+            return { title: channel ? channel.name : "Chat" };
           }}
         />
       </Stack.Navigator>
