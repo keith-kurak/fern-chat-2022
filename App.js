@@ -8,6 +8,7 @@ import { StoreProvider } from "./src/RootStore";
 import firebaseConfig from './firebaseConfig.json';
 
 const app = initializeApp(firebaseConfig);
+// needed this due to connection failures on Android
 initializeFirestore(app, { experimentalForceLongPolling: true });
 LogBox.ignoreLogs(['AsyncStorage has been extracted', 'Setting a timer for a long period']);
 
