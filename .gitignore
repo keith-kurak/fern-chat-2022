@@ -11,12 +11,6 @@ web-build/
 
 # macOS
 .DS_Store
-
-# firebase config
-firebaseConfig.json
-.firebase/hosting.d2ViLWJ1aWxk.cache
-.firebaserc
-
 # @generated: @expo/electron-adapter@0.0.55
 /.expo/*
 # Expo Web
@@ -24,3 +18,6 @@ firebaseConfig.json
 # electron-webpack
 /dist
 # @end @expo/electron-adapter
+firebaseConfig.json
+.firebaserc
+.firebase/*
