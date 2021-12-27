@@ -29,7 +29,9 @@
     "web": "expo start --web",
     "eject": "expo eject",
     "predeploy": "expo build:web",
-    "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
+    "deploy-hosting": "npm run predeploy && firebase deploy --only hosting",
+    "build-electron": "yarn electron-webpack && yarn electron-builder",
+    "start-electron": "yarn expo-electron start"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
