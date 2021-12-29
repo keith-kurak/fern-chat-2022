@@ -13,6 +13,12 @@ import {
   getFirestore,
   addDoc,
 } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth"; // use me for managing firebase auth
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
@@ -43,9 +49,9 @@ const RootStore = types
 
     const stopStreamingChannels = () => {
       if (unsubscribeFromChannelsFeed) {
-      unsubscribeFromChannelsFeed();
+        unsubscribeFromChannelsFeed();
       }
-    }
+    };
 
     const addChannel = flow(function* addChannel() {
       const db = getFirestore();
@@ -59,13 +65,15 @@ const RootStore = types
       });
     });
 
-    const login = () => {
+    const login = flow(function* login({ username, password }) {
+      const auth = getAuth(); // gotta do something with this
       self.isLoggedIn = true;
-    };
+    });
 
-    const logout = () => {
+    const logout = flow(function* login({ username, password }) {
+      const auth = getAuth(); // gotta do something with this
       self.isLoggedIn = false;
-    };
+    });
 
     // semi-private function only used to encapsulate channel update
     const updateChannels = (querySnapshot) => {
@@ -75,7 +83,20 @@ const RootStore = types
       });
     };
 
+    // include semi-private function to set model prop in firebase auth callback
+    const setIsLoggedIn = (isLoggedIn, user) => {
+      self.isLoggedIn = isLoggedIn;
+      self.user = user;
+    };
+
+    // special MST function called automatically on model create
+    const afterCreate = () => {
+      const auth = getAuth();
+      // manage logged in/ logged out status here
+    };
+
     return {
+      afterCreate,
       addChannel,
       login,
       logout,
