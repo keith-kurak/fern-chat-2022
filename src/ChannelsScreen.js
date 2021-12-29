@@ -1,5 +1,7 @@
 import * as React from "react";
 import { View, Text, FlatList, Pressable } from "react-native";
+import { observer } from "mobx-react"; // wrap the screen so I can respond to observable changes!
+import { useStore } from './RootStore'; // use me so the screen can access the rootStore!
 
 // mock data - we'll replace this later
 const mockChannels = [

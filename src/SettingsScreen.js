@@ -1,5 +1,6 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native"; // make a button and map it to rootStore.logout()
+import { useStore } from "./RootStore";
 
 export default function SettingsScreen() {
   return (
