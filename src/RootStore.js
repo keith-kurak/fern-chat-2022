@@ -16,7 +16,7 @@ import {
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.string,
+  id: types.identifier,
   name: types.string,
 });
 
@@ -42,7 +42,9 @@ const RootStore = types
     };
 
     const stopStreamingChannels = () => {
+      if (unsubscribeFromChannelsFeed) {
       unsubscribeFromChannelsFeed();
+      }
     }
 
     const addChannel = flow(function* addChannel() {
