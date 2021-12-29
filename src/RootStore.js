@@ -70,7 +70,7 @@ const RootStore = types
       self.isLoggedIn = true;
     });
 
-    const logout = flow(function* login({ username, password }) {
+    const logout = flow(function* logout() {
       const auth = getAuth(); // gotta do something with this
       self.isLoggedIn = false;
     });
