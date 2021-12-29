@@ -1,19 +1,19 @@
 import * as React from "react";
-import { Pressable, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
+import { Pressable, Platform } from "react-native";
 import SettingsScreen from "./SettingsScreen";
+import ChannelsScreen from "./ChannelsScreen";
 import ChatScreen from "./ChatScreen";
 import LoginScreen from "./LoginScreen";
-import ChannelsScreen from "./ChannelsScreen";
 
 const Stack = createNativeStackNavigator();
 
 export default function Storyboard() {
   const isLoggedIn = true;
   if (!isLoggedIn) {
-    return <LoginScreen />
+    return <LoginScreen />;
   }
 
   return (
@@ -32,7 +32,11 @@ export default function Storyboard() {
                 }
                 onPress={() => navigation.navigate("Settings")}
               >
-                <Feather name="settings" size={18} style={Platform.OS === 'web' && { paddingHorizontal: 10 }} />
+                <Feather
+                  name="settings"
+                  size={18}
+                  style={Platform.OS === "web" && { paddingHorizontal: 10 }}
+                />
               </Pressable>
             ),
           })}
