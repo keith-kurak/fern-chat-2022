@@ -1,4 +1,4 @@
-import { types } from "mobx-state-tree";
+import { types, flow /* use for async functions */ } from "mobx-state-tree";
 import { sortBy } from "lodash";
 import React from "react";
 import {
@@ -16,7 +16,7 @@ import {
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.number,
+  id: types.number, // I'm gonna error out unless you change me to a string/ identifier
   name: types.string,
 });
 
@@ -32,7 +32,26 @@ const RootStore = types
     },
   }))
   .actions((self) => {
-    const addChannel = () => {
+    // new functions for subscribing/ unsubscribing to channels
+    let unsubscribeFromChannelsFeed; // use for cleanup
+    const startStreamingChannels = () => {
+      const db = getFirestore();
+      // make a query and call onSnapshot to subscribe to changes from the query
+    };
+
+    const stopStreamingChannels = () => {
+      if (unsubscribeFromChannelsFeed) {
+        unsubscribeFromChannelsFeed();
+      }
+    }
+    
+     // semi-private function only used to encapsulate channel update
+    const updateChannels = (querySnapshot) => {
+      // clear out channels 
+    };
+
+    const addChannel = flow(function* addChannel() {
+      // made this function async just because
       self.channels.push({
         id: self.channels.length,
         name: uniqueNamesGenerator({
@@ -41,7 +60,7 @@ const RootStore = types
           separator: "-",
         }) /* names like: "awesome-ocelot" */,
       });
-    };
+    });
 
     const login = () => {
       self.isLoggedIn = true;
@@ -58,45 +77,13 @@ const RootStore = types
     };
   });
 
-// mock data - we'll replace this later
-const mockChannels = [
-  {
-    id: 0,
-    name: "videogames",
-  },
-  {
-    id: 1,
-    name: "viralvideos",
-  },
-  {
-    id: 2,
-    name: "underwaterbasketweaving",
-  },
-  {
-    id: 3,
-    name: "codemash",
-  },
-  {
-    id: 4,
-    name: "mashedpotatoes",
-  },
-  {
-    id: 5,
-    name: "knittingcentral",
-  },
-  {
-    id: 6,
-    name: "llamatalk",
-  },
-];
-
 
 // Create a Provider that creates a singleton for the RootStore, wrap it in a Provider component, and create a custom hook to make it easy to use
 
 const StoreContext = React.createContext(null);
 
 export const StoreProvider = ({ children }) => {
-  const store = RootStore.create({ channels: mockChannels });
+  const store = RootStore.create({ /* no more mock data */ });
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );
