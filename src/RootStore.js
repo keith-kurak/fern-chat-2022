@@ -12,6 +12,8 @@ import {
   onSnapshot,
   getFirestore,
   addDoc,
+  doc, // use me when adding a new chat message
+  serverTimestamp,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -116,6 +118,30 @@ const RootStore = types
       self.user = user;
     };
 
+    // sending/ receiving messages
+    const sendMessage = flow(function* sendMessage({ text, channelId }) {
+      const db = getFirestore();
+      // add a message doc to the proper channel here
+    });
+
+    // stream messsages to the messages prop
+    let unsubscribeFromChannelMessagesFeed;
+    const startStreamingChannelMessages = (channelId) => {
+      const db = getFirestore();
+      // subscribe to channel's messages here
+    };
+
+    const stopStreamingCurrentChannel = () => {
+      self.messages = [];
+      unsubscribeFromChannelMessagesFeed();
+    };
+
+    // add semi-private function to update messages prop
+    const updateMessages = (querySnapshot) => {
+      self.messages = [];
+      // update self.messages from snapshot here
+    };
+
     return {
       afterCreate,
       addChannel,
@@ -125,6 +151,9 @@ const RootStore = types
       stopStreamingChannels,
       updateChannels,
       setIsLoggedIn,
+      startStreamingChannelMessages,
+      stopStreamingCurrentChannel,
+      updateMessages,
     };
   });
 
