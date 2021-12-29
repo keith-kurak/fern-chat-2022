@@ -1,11 +1,11 @@
 import { types, flow, tryReference } from "mobx-state-tree";
 import { sortBy } from "lodash";
+import React from "react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
 } from "unique-names-generator";
-import React from "react";
 import {
   collection,
   query,
@@ -98,7 +98,9 @@ const RootStore = types
     };
 
     const stopStreamingChannels = () => {
-      unsubscribeFromChannelsFeed();
+      if (unsubscribeFromChannelsFeed) {
+        unsubscribeFromChannelsFeed();
+      }
     };
 
     const updateChannels = (querySnapshot) => {
@@ -112,9 +114,10 @@ const RootStore = types
     let unsubscribeFromChannelMessagesFeed; // we could later use this to tear down on logout... or something
     const startStreamingChannelMessages = (channelId) => {
       const db = getFirestore();
-      const q = query(
-        collection(doc(collection(db, "channels"), channelId), "messages")
-      );
+      const channelsCollection = collection(db, "channels");
+      const channelDoc = doc(channelsCollection, channelId);
+      const messagesCollection = collection(channelDoc, "messages");
+      const q = query(messagesCollection);
       unsubscribeFromChannelMessagesFeed = onSnapshot(q, (querySnapshot) => {
         self.updateMessages(querySnapshot);
       });
@@ -132,6 +135,7 @@ const RootStore = types
         self.messages.push({
           id: doc.id,
           uid: data.uid,
+          username: data.username,
           // when message is added locally before upload, time is null because it will
           // later be set by the server
           time: data.time ? data.time.seconds * 1000 : new Date().getTime(),
@@ -187,9 +191,12 @@ const RootStore = types
 
     const sendMessage = flow(function* sendMessage({ text, channelId }) {
       const db = getFirestore();
+      const channelsCollection = collection(db, "channels");
+      const channelDoc = doc(channelsCollection, channelId);
+      const messagesCollection = collection(channelDoc, "messages");
       // add new document with auto-id
       yield addDoc(
-        collection(doc(collection(db, "channels"), channelId), "messages"),
+        messagesCollection,
         {
           text,
           time: serverTimestamp(),
@@ -203,9 +210,8 @@ const RootStore = types
       const auth = getAuth();
       try {
         self.isLoading = true;
-        const user = yield signInWithEmailAndPassword(auth, username, password);
-        self.isLoggedIn = true;
         self.loginError = null;
+        const user = yield signInWithEmailAndPassword(auth, username, password);
         console.log(user);
       } catch (error) {
         self.loginError = error;
@@ -219,7 +225,6 @@ const RootStore = types
       const auth = getAuth();
       try {
         yield signOut(auth);
-        self.isLoggedIn = false;
       } catch (error) {
         // eh?
       }
@@ -241,10 +246,6 @@ const RootStore = types
       }
     });
 
-    const setIsLoading = (isLoading) => {
-      self.isLoading = isLoading;
-    };
-
     return {
       afterCreate,
       addChannel,
@@ -260,7 +261,9 @@ const RootStore = types
       updateMessages,
       updateUsers,
       setIsLoggedIn,
-      setIsLoading,
+      startStreamingChannelMessages,
+      stopStreamingCurrentChannel,
+      updateMessages,
       sendMessage,
       updateUsername,
     };
@@ -277,6 +280,7 @@ export const StoreProvider = ({ children }) => {
   );
 };
 
+// We'll use this this to use the store in screen components
 export const useStore = () => {
   const store = React.useContext(StoreContext);
   if (!store) {
