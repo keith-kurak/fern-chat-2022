@@ -1,11 +1,11 @@
 import { types } from "mobx-state-tree";
 import { sortBy } from "lodash";
+import React from "react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
 } from "unique-names-generator";
-import React from "react";
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
@@ -51,10 +51,6 @@ const RootStore = types
     };
   });
 
-// Create a Provider that creates a singleton for the RootStore, wrap it in a Provider component, and create a custom hook to make it easy to use
-
-const StoreContext = React.createContext(null);
-
 // mock data - we'll replace this later
 const mockChannels = [
   {
@@ -87,6 +83,11 @@ const mockChannels = [
   },
 ];
 
+
+// Create a Provider that creates a singleton for the RootStore, wrap it in a Provider component, and create a custom hook to make it easy to use
+
+const StoreContext = React.createContext(null);
+
 export const StoreProvider = ({ children }) => {
   const store = RootStore.create({ channels: mockChannels });
   return (
@@ -94,6 +95,7 @@ export const StoreProvider = ({ children }) => {
   );
 };
 
+// We'll use this this to use the store in screen components
 export const useStore = () => {
   const store = React.useContext(StoreContext);
   if (!store) {
