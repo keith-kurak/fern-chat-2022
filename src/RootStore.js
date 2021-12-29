@@ -1,11 +1,11 @@
 import { types, flow } from "mobx-state-tree";
 import { sortBy } from "lodash";
+import React from "react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
 } from "unique-names-generator";
-import React from "react";
 import {
   collection,
   query,
@@ -16,7 +16,7 @@ import {
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.string,
+  id: types.identifier,
   name: types.string,
 });
 
@@ -42,7 +42,9 @@ const RootStore = types
     };
 
     const stopStreamingChannels = () => {
+      if (unsubscribeFromChannelsFeed) {
       unsubscribeFromChannelsFeed();
+      }
     }
 
     const addChannel = flow(function* addChannel() {
@@ -94,6 +96,7 @@ export const StoreProvider = ({ children }) => {
   );
 };
 
+// We'll use this this to use the store in screen components
 export const useStore = () => {
   const store = React.useContext(StoreContext);
   if (!store) {

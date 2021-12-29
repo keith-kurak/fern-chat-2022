@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Pressable, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
+import { Pressable, Platform } from "react-native";
 import { observer } from "mobx-react";
 import SettingsScreen from "./SettingsScreen";
+import ChannelsScreen from "./ChannelsScreen";
 import ChatScreen from "./ChatScreen";
 import LoginScreen from "./LoginScreen";
-import ChannelsScreen from "./ChannelsScreen";
 import { useStore } from "./RootStore";
 
 const Stack = createNativeStackNavigator();
