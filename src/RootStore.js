@@ -1,11 +1,11 @@
 import { types, flow } from "mobx-state-tree";
 import { sortBy } from "lodash";
+import React from "react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
 } from "unique-names-generator";
-import React from "react";
 import {
   collection,
   query,
@@ -22,7 +22,7 @@ import {
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
-  id: types.string,
+  id: types.identifier,
   name: types.string,
 });
 
@@ -62,7 +62,9 @@ const RootStore = types
     };
 
     const stopStreamingChannels = () => {
-      unsubscribeFromChannelsFeed();
+      if (unsubscribeFromChannelsFeed) {
+        unsubscribeFromChannelsFeed();
+      }
     };
 
     const addChannel = flow(function* addChannel() {
@@ -81,9 +83,8 @@ const RootStore = types
       const auth = getAuth();
       try {
         self.isLoading = true;
-        const user = yield signInWithEmailAndPassword(auth, username, password);
-        self.isLoggedIn = true;
         self.loginError = null;
+        const user = yield signInWithEmailAndPassword(auth, username, password);
         console.log(user);
       } catch (error) {
         self.loginError = error;
@@ -97,14 +98,12 @@ const RootStore = types
       const auth = getAuth();
       try {
         yield signOut(auth);
-        self.isLoggedIn = false;
       } catch (error) {
         // eh?
       }
     });
 
     // semi-private functions only used to encapsulate updates in actions
-
     const updateChannels = (querySnapshot) => {
       self.channels = [];
       querySnapshot.forEach((doc) => {
@@ -117,10 +116,6 @@ const RootStore = types
       self.user = user;
     };
 
-    const setIsLoading = (isLoading) => {
-      self.isLoading = isLoading;
-    };
-
     return {
       afterCreate,
       addChannel,
@@ -130,7 +125,6 @@ const RootStore = types
       stopStreamingChannels,
       updateChannels,
       setIsLoggedIn,
-      setIsLoading,
     };
   });
 
@@ -145,6 +139,7 @@ export const StoreProvider = ({ children }) => {
   );
 };
 
+// We'll use this this to use the store in screen components
 export const useStore = () => {
   const store = React.useContext(StoreContext);
   if (!store) {
