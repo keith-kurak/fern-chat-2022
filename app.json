@@ -17,7 +17,7 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.keithkurak.fernchat2022",
+      "bundleIdentifier": "com.companyname.changeme",
       "supportsTablet": true,
       "buildNumber": "1"
     },
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.keithkurak.fernchat2022",
+      "package": "com.companyname.changeme",
       "versionCode": 1
     },
     "web": {
