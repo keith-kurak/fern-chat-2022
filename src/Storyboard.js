@@ -57,7 +57,10 @@ export default observer(function Storyboard() {
           })}
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="Chat" component={ChatScreen} options={({ route }) => {
+          // change the title in the header to the name of the channel here!
+          return {}
+         }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

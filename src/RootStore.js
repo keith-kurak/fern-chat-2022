@@ -6,6 +6,13 @@ import {
   adjectives,
   animals,
 } from "unique-names-generator";
+import {
+  collection,
+  query,
+  onSnapshot,
+  getFirestore,
+  addDoc,
+} from "firebase/firestore"; // use these to read and add channels to Firebase
 
 // create a type used by your RootStore
 const Channel = types.model("Channel", {
