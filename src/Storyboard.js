@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Pressable, Platform, KeyboardAvoidingView } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Feather } from "@expo/vector-icons";
