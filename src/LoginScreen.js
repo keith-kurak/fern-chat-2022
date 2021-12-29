@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Button, TextInput /* use these to accept username/ password */ } from "react-native";
+import { observer } from 'mobx-react';
 import { useStore } from './RootStore';
 
 // use these on each text input to make it not look so bad
@@ -13,7 +14,7 @@ const textInputStyle = {
   margin: 3,
 };
 
-export default function LoginScreen() {
+export default observer(function LoginScreen() {
   const rootStore = useStore();
 
   // let's just use local state for username/ password - only need for as long as this screen is open
@@ -32,4 +33,4 @@ export default function LoginScreen() {
       <Button onPress={() => rootStore.login({ username, password })} title="Login" />
     </View>
   );
-}
+});
