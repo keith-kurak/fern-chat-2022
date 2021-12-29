@@ -1,5 +1,12 @@
 import * as React from "react";
-import { View, Text } from "react-native";
+import {
+  View,
+  Text,
+  FlatList, // gonna need these to make a list of channels
+  Pressable,
+} from "react-native";
+
+const mockChannels = []; // add some mocks and then display them!
 
 export default function ChannelsScreen() {
   return (
