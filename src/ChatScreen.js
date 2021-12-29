@@ -1,10 +1,12 @@
-import * as React from "react";
-import { View, Text } from "react-native";
+import React, { useEffect } from "react";
 import SimpleChat from './components/SimpleChat';
 import { observer } from "mobx-react";
 import { useStore } from './RootStore';
 
 export default observer(function ChatScreen({ route }) {
+  useEffect(() => {
+    // subscribe to channel here!
+  }, []);
   const rootStore = useStore();
   return (
     <SimpleChat messages={[

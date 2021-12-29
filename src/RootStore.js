@@ -121,7 +121,11 @@ const RootStore = types
     // sending/ receiving messages
     const sendMessage = flow(function* sendMessage({ text, channelId }) {
       const db = getFirestore();
-      // add a message doc to the proper channel here
+      // get the address of the collection we're adding to
+      const channelsCollection = collection(db, "channels");
+      const channelDoc = doc(channelsCollection, channelId);
+      const messagesCollection = collection(channelDoc, "messages");
+      // add a message doc to the channel's message collection here
     });
 
     // stream messsages to the messages prop
@@ -139,7 +143,18 @@ const RootStore = types
     // add semi-private function to update messages prop
     const updateMessages = (querySnapshot) => {
       self.messages = [];
-      // update self.messages from snapshot here
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        self.messages.push({
+          id: doc.id,
+          uid: data.uid,
+          username: data.username,
+          // when message is added locally before upload, time is null because it will
+          // later be set by the server
+          time: data.time ? data.time.seconds * 1000 : new Date().getTime(),
+          text: data.text,
+        });
+      });
     };
 
     return {
@@ -154,6 +169,7 @@ const RootStore = types
       startStreamingChannelMessages,
       stopStreamingCurrentChannel,
       updateMessages,
+      sendMessage,
     };
   });
 
