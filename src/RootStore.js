@@ -1,11 +1,11 @@
 import { types, flow } from "mobx-state-tree";
 import { sortBy } from "lodash";
+import React from "react";
 import {
   uniqueNamesGenerator,
   adjectives,
   animals,
 } from "unique-names-generator";
-import React from "react";
 import {
   collection,
   query,
@@ -94,6 +94,7 @@ export const StoreProvider = ({ children }) => {
   );
 };
 
+// We'll use this this to use the store in screen components
 export const useStore = () => {
   const store = React.useContext(StoreContext);
   if (!store) {
