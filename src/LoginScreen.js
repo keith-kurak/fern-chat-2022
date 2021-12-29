@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Button } from "react-native";
+import { View, Button, TextInput /* use these to accept username/ password */ } from "react-native";
 import { useStore } from './RootStore';
 
 export default function LoginScreen() {

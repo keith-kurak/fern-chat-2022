@@ -103,6 +103,7 @@ const RootStore = types
       startStreamingChannels,
       stopStreamingChannels,
       updateChannels,
+      setIsLoggedIn,
     };
   });
 
