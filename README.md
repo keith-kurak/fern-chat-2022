@@ -18,9 +18,10 @@ If you regularly do JavaScript development, you likely have many of these instal
 9. Download the "Expo Go" app on your phone from the App Store or Play Store. Sign into the app using the Expo account you just created.
 10. Go to the [Firebase Console](https://console.firebase.google.com/), click "Create a Project" or "Add Project", give it a name like "[myname]-fern-chat-2022" and accept all the default options. A google account is required for this step.
 #### Fork/ Clone the demo project and restore dependencies (recommended!)
-*It's a good idea to restore dependencies in case the network goes wonky during the session! Fork AND clone the repo if you'd like to push anything you do to Github. Just cloning it is fine, too!*
+*It's a good idea to restore dependencies in case the network goes wonky during the session! Fork AND clone the repo if you'd like to push anything you do to Github. Just cloning it is fine, too, if you just want to keep everything local.*
+
 11. Click "Fork" at the top of this page to fork the repo.
-12. Clone your fork (easy way: click the green "Code" button, then "Open in Github Desktop".
+12. Clone your fork (easy way: click the green "Code" button, then "Open in Github Desktop").
 13. CD to the `fern-chat-2022` folder and run `yarn`.
 
 ### Platform-specific tips
