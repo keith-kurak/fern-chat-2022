@@ -44,7 +44,14 @@ We will walk through this during the pre-compiler, but you can also try it ahead
 5. If all goes well, the app will appear on your phone! If you have connection issues, verify your computer and phone are on the same network, or choose the "tunnel" option on the Expo web page that opened in the last step.
 6. Click "Run in web browser" on the QR code web page (or press 'w' in the CLI). After a while, the app should appear in your browser, as well!
 
-# FERN Stack Session Code-a-long docs
+# FERN Stack Session Code-a-long
+## Run the code
+1. Run `yarn` to restore dependencies
+2. Run `expo login` to login to your Expo account (only required for testing on an iOS device)
+3. Run `yarn start` to start the bundler
+4. Scan the QR code with your device to run in the Expo Go app (must be logged into Expo Go on iOS) AND/ OR
+5. Press `w` to start webpack and run the web version.
 
+## Try some code
 [Open these slides to follow along with the coding exercises](https://docs.google.com/presentation/d/1a3LBu4Pr0bhZSaDZzKlDr8hrAeIiLIO2MQmbcSYabzs/edit?usp=sharing). This has just the "TODO" slides with links to the starting branch and Gist guide.
 
