@@ -55,3 +55,5 @@ We will walk through this during the pre-compiler, but you can also try it ahead
 ## Try some code
 [Open these slides to follow along with the coding exercises](https://docs.google.com/presentation/d/1a3LBu4Pr0bhZSaDZzKlDr8hrAeIiLIO2MQmbcSYabzs/edit?usp=sharing). This has just the "TODO" slides with links to the starting branch and Gist guide.
 
+## Other presentation materials:
+[The full slides](https://docs.google.com/presentation/d/1ppJL2kTDJbmn3Wu0Vn6AfyNN8duplaKttGFcfCkqnlo/edit?usp=sharing)
